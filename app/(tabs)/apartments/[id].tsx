@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Image, ScrollView } from "react-native";
-import { useRouter, useLocalSearchParams } from "expo-router";
 import { getApartmentDetails } from "../../../services/apartments";
+import {
+  useGlobalSearchParams,
+  useLocalSearchParams,
+  useRouter,
+} from "expo-router";
 
 interface Apartment {
   id: number;
@@ -17,16 +21,16 @@ interface Apartment {
 }
 
 const ApartmentDetailsScreen = () => {
-  const { apartmentId } = useLocalSearchParams<any>();
+  const local = useLocalSearchParams();
   const [apartment, setApartment] = useState<Apartment | null>(null);
 
   useEffect(() => {
     const fetchDetails = async () => {
-      const data = await getApartmentDetails(apartmentId);
+      const data = await getApartmentDetails(parseInt(local.id as string));
       setApartment(data);
     };
     fetchDetails();
-  }, [apartmentId]);
+  }, [local.id]);
 
   if (!apartment) {
     return <Text>Loading...</Text>;
