@@ -7,8 +7,8 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import { getApartments } from "../../services/apartments";
-import { useNavigation, NavigationProp } from "@react-navigation/native";
+import { getApartments } from "../../../services/apartments";
+import { useRouter } from "expo-router";
 
 interface Apartment {
   id: number;
@@ -23,13 +23,9 @@ interface Apartment {
   images: string[];
 }
 
-type RootStackParamList = {
-  ApartmentDetails: { apartment: Apartment };
-};
-
-const Home = () => {
+const ApartmentsScreen = () => {
   const [apartments, setApartments] = useState<Apartment[]>([]);
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,7 +38,10 @@ const Home = () => {
   const renderItem = ({ item }: { item: Apartment }) => (
     <TouchableOpacity
       onPress={() =>
-        navigation.navigate("ApartmentDetails", { apartment: item })
+        router.push({
+          pathname: "/apartmentDetails",
+          params: { apartmentId: item.id },
+        })
       }
     >
       <View style={styles.card}>
@@ -101,4 +100,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Home;
+export default ApartmentsScreen;
